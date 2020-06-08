@@ -156,13 +156,13 @@ def store_stats(submission_results, reporting_results):
                              'n_urls_received': urls_in_sum,
                              'n_urls_submitted': urls_sent_sum,
                              'n_phishing': n_phishing,
-                             'n_blocked: ': n_blocked,
-                             'n_nothreat: ': n_nothreat,
-                             'n_suspicious: ': n_suspicious, 
-                             'n_malware: ': n_malware, 
-                             'n_processing: ': n_processing,
-                             'n_unavailable: ': n_unavailable,
-                             'n_rejected: ': n_rejected })
+                             'n_blocked': n_blocked,
+                             'n_nothreat': n_nothreat,
+                             'n_suspicious': n_suspicious, 
+                             'n_malware': n_malware, 
+                             'n_processing': n_processing,
+                             'n_unavailable': n_unavailable,
+                             'n_rejected': n_rejected })
 
 ##########################################################################
 #
