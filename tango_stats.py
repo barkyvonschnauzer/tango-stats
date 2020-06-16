@@ -129,6 +129,7 @@ def store_stats(submission_results, reporting_results):
     n_processing  = int(reporting_results[0]['n_processing'])
     n_unavailable = int(reporting_results[0]['n_unavailable'])
     n_rejected    = int(reporting_results[0]['n_rejected'])
+    n_repeats     = int(reporting_results[0]['n_repeats'])
 
     print ("**** COUNTS ****")
     print ("urls_in: " + str(urls_in_sum))
@@ -141,6 +142,7 @@ def store_stats(submission_results, reporting_results):
     print ("processing_sum: " + str(n_processing))
     print ("unavailable_sum: " + str(n_unavailable))
     print ("rejected_sum: " + str(n_rejected))
+    print ("repeats: " + str(n_repeats))
 
     container.upsert_item( { 'id': id_date_str,
                              'date_time': id_date_str,
@@ -154,7 +156,8 @@ def store_stats(submission_results, reporting_results):
                              'n_malware': n_malware, 
                              'n_processing': n_processing,
                              'n_unavailable': n_unavailable,
-                             'n_rejected': n_rejected })
+                             'n_rejected': n_rejected,
+                             'n_repeats': n_repeats })
 
 
 if __name__ == "__main__":
