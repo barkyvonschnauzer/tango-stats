@@ -34,8 +34,6 @@ def main():
     for result in reporting_results:
         print (json.dumps(result, indent = True))
 
-    #netcraft_results = get__netcraft_results()
-
     store_stats(submission_results, reporting_results)
 
 ##########################################################################
@@ -44,7 +42,7 @@ def main():
 # Input: None.
 # Output: TBD
 #
-# Purpose: Connect to COSMOS DB and pull the two most recent records.
+# Purpose: Connect to COSMOS DB and pull records for the last day.
 #
 ##########################################################################
 def get_records_from_cosmos():
@@ -55,32 +53,26 @@ def get_records_from_cosmos():
     key = os.environ.get('ACCOUNT_KEY')
     database_id = os.environ.get('DATABASE_ID')
     results_container_id = os.environ.get('RESULTS_CONTAINER_ID')
-   
-    client = CosmosClient(uri, {'masterKey': key})
-    print (client)
-
-    database = client.get_database_client(database_id)
-    results_container = database.get_container_client(results_container_id)
-
-    reporting_results = list(results_container.query_items(query = 'SELECT TOP 1 * FROM c ORDER BY c._ts DESC', enable_cross_partition_query = True))    
-
-    print ("**** QUERY SUBMISSION CONTAINER ***")
-
     submission_container_id = os.environ.get('SUBMISSION_CONTAINER_ID')
 
     client = CosmosClient(uri, {'masterKey': key})
     print (client)
 
+    # Connect to database and containers
     database = client.get_database_client(database_id)
+    results_container = database.get_container_client(results_container_id)
     submission_container = database.get_container_client(submission_container_id)
 
-    date_str = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     current_date = datetime.now()
-
     yesterday  = int((datetime.utcnow() - relativedelta(days=1)).timestamp())
 
-    query = 'SELECT * FROM c WHERE c._ts > {}'.format(str(yesterday))
-    submission_results = list(submission_container.query_items(query, enable_cross_partition_query = True))
+    print ("**** QUERY RESULTS CONTAINER ****")
+    query_reporting   = 'SELECT * FROM c ORDER BY c._ts DESC'
+    reporting_results = list(results_container.query_items(query_reporting, enable_cross_partition_query = True))    
+    
+    print ("**** QUERY SUBMISSION CONTAINER ****")
+    query_submission   = 'SELECT * FROM c WHERE c._ts > {}'.format(str(yesterday))
+    submission_results = list(submission_container.query_items(query_submission, enable_cross_partition_query = True))
 
     return submission_results, reporting_results
 
@@ -163,19 +155,6 @@ def store_stats(submission_results, reporting_results):
                              'n_processing': n_processing,
                              'n_unavailable': n_unavailable,
                              'n_rejected': n_rejected })
-
-##########################################################################
-#
-# Function name: get_netcraft_results
-# Input: TBD
-# Output: TBD
-#
-# Purpose: connect to Netcraft and get all results in Karen Dummy area.
-#          These results will include redirects.
-#
-##########################################################################
-def get_netcraft_results():
-    print ("**** GET ALL NETCRAFT RESULTS ****")
 
 
 if __name__ == "__main__":
