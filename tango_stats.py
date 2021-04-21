@@ -15,8 +15,6 @@ from dateutil.relativedelta import relativedelta
 # Input: None.
 # Output: TBD
 #
-# Purpose: Connect to COSMOS DB and compute delta of malicious URLs
-#
 ##########################################################################
 def main():
 
